@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم الصور | إرث كافي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rakkas&family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Rakkas', 'serif'],
+        ruqaa: ['Aref Ruqaa', 'serif'],
+        sans: ['Tajawal', 'sans-serif'],
+      },
+      colors: {
+        clay: { 950:'#170F0A', 900:'#241509', 800:'#3A2110', 700:'#5C3A26' },
+        sadu: { red:'#9E3223', black:'#161009' },
+        gypsum: { 100:'#F6EFDC', 200:'#EADFC2', 300:'#D8C79E' },
+        gold: { DEFAULT:'#C9A227', bright:'#E8C34F', dim:'#7A611C' }
+      }
+    }
+  }
+}
+</script>
+<style>
+  html{ scroll-behavior:smooth; }
+  body{ background:#170F0A; color:#F6EFDC; }
+  .card{ background:#241509; border:1px solid #5C3A26; }
+  .slot-img{ background:#161009; }
+  input[type=file]::file-selector-button{
+    background:#C9A227; color:#161009; border:none; padding:.5rem 1rem; border-radius:.5rem;
+    font-family:'Tajawal',sans-serif; font-weight:700; cursor:pointer; margin-left:.75rem;
+  }
+</style>
+</head>
+<body class="font-sans min-h-screen">
+
+  <!-- ===== Password Gate ===== -->
+  <div id="gate" class="min-h-screen flex items-center justify-center px-4">
+    <div class="card rounded-2xl p-8 max-w-sm w-full text-center">
+      <h1 class="font-display text-3xl text-gold-bright mb-1">إرث كافي</h1>
+      <p class="text-gypsum-300 mb-6">لوحة تحكم الصور — للإدارة فقط</p>
+      <input id="pwInput" type="password" placeholder="كلمة المرور"
+        class="w-full rounded-lg px-4 py-3 bg-clay-950 border border-clay-700 text-gypsum-100 text-center mb-3 outline-none focus:border-gold">
+      <button onclick="tryLogin()" class="w-full bg-gold text-clay-950 font-bold py-3 rounded-lg hover:bg-gold-bright transition">دخول</button>
+      <p id="pwError" class="text-sadu-red text-sm mt-3 hidden">كلمة المرور غير صحيحة</p>
+    </div>
+  </div>
+
+  <!-- ===== Admin Panel ===== -->
+  <div id="panel" class="hidden max-w-5xl mx-auto px-4 py-10">
+    <div class="text-center mb-10">
+      <h1 class="font-display text-4xl text-gold-bright mb-2">لوحة تحكم صور الموقع</h1>
+      <p class="text-gypsum-300">اختر صورة جديدة لأي مكان في الموقع، ثم اضغط "رفع ونشر". التغيير يظهر مباشرة على الموقع دون الحاجة لأي تعديل بالكود.</p>
+    </div>
+
+    <div id="grid" class="grid sm:grid-cols-2 gap-6"></div>
+
+    <!-- ===== الأجواء الصوتية ===== -->
+    <div class="card rounded-2xl p-6 mt-10">
+      <h2 class="font-display text-2xl text-gold-bright mb-2">صوت الأجواء (اختياري)</h2>
+      <p class="text-gypsum-300 text-sm mb-4">ارفع مقطع صوت قصير (mp3) — مثل صوت صبّ القهوة — وسيظهر زر تشغيل صغير للزوار أسفل يسار الموقع. إن لم تَرفع صوتاً، الزر لا يظهر إطلاقاً.</p>
+      <audio id="ambient-preview" controls class="w-full mb-3" onerror="this.style.display='none'"></audio>
+      <input type="file" accept="audio/*" id="file-ambient-sound" class="text-sm text-gypsum-300 mb-3 w-full">
+      <div class="flex gap-2">
+        <button onclick="uploadSound()" class="flex-1 bg-gold text-clay-950 font-bold py-2 rounded-lg hover:bg-gold-bright transition">رفع الصوت</button>
+        <button onclick="deleteSound()" class="px-4 border border-sadu-red text-sadu-red font-bold py-2 rounded-lg hover:bg-sadu-red hover:text-gypsum-100 transition">حذف الصوت</button>
+      </div>
+      <p id="status-ambient-sound" class="text-sm mt-2 min-h-[1.25rem]"></p>
+    </div>
+
+    <p class="text-center text-gypsum-300/70 text-sm mt-10">إرث كافي — نظام إدارة الصور</p>
+  </div>
+
+<script>
+  // ====== Config ======
+  var SUPABASE_URL = "https://gslxfgyghpbsfzzruwkk.supabase.co";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzbHhmZ3lnaHBic2Z6enJ1d2trIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NzE0NzYsImV4cCI6MjA5OTU0NzQ3Nn0.5lDAQbAQfRNsA4B3WYEm9HkccMGmoRryho7vf9Xl6SU";
+  var BUCKET = "site-images";
+  var SOUND_KEY = "ambient-sound.mp3";
+
+  // SHA-256 hash of the admin password (see message below for the plain password)
+  var PASSWORD_HASH = "48308cd3828f2dbb36938c79e985aeae1f7cbbb25e2b3864c20a095ccdc1012e";
+
+  var SLOTS = [
+    { key: "hero",                      label: "الصورة الرئيسية (الغلاف الليلي)" },
+    { key: "gallery-courtyard",         label: "فناء إرث كافي" },
+    { key: "gallery-identity",          label: "هوية إرث كافي" },
+    { key: "gallery-courtyard-night",   label: "فناء إرث كافي ليلاً" },
+    { key: "gallery-entrance-sunset",   label: "مدخل إرث كافي عند الغروب" },
+    { key: "gallery-bread-saj",         label: "خبز تقليدي على الصاج" },
+    { key: "gallery-evening-seating",   label: "جلسة مسائية" },
+    { key: "gallery-breakfast",         label: "فطور تراثي" },
+  ];
+
+  async function sha256(text) {
+    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function tryLogin() {
+    var val = document.getElementById("pwInput").value;
+    var hash = await sha256(val);
+    if (hash === PASSWORD_HASH) {
+      document.getElementById("gate").classList.add("hidden");
+      document.getElementById("panel").classList.remove("hidden");
+      sessionStorage.setItem("erth_admin_ok", "1");
+      buildGrid();
+    } else {
+      document.getElementById("pwError").classList.remove("hidden");
+    }
+  }
+
+  document.getElementById("pwInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter") tryLogin();
+  });
+
+  if (sessionStorage.getItem("erth_admin_ok") === "1") {
+    document.getElementById("gate").classList.add("hidden");
+    document.getElementById("panel").classList.remove("hidden");
+    buildGrid();
+  }
+
+  function publicUrl(slotKey) {
+    return SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" + slotKey + ".jpg?v=" + Date.now();
+  }
+
+  function buildGrid() {
+    var grid = document.getElementById("grid");
+    grid.innerHTML = "";
+    SLOTS.forEach(function (slot) {
+      var card = document.createElement("div");
+      card.className = "card rounded-2xl p-4";
+      card.innerHTML =
+        '<div class="slot-img rounded-lg overflow-hidden aspect-video mb-3">' +
+          '<img id="img-' + slot.key + '" src="' + publicUrl(slot.key) + '" ' +
+            'onerror="this.style.opacity=0.15" class="w-full h-full object-cover" alt="">' +
+        '</div>' +
+        '<p class="text-gypsum-200 font-medium mb-2">' + slot.label + '</p>' +
+        '<input type="file" accept="image/*" id="file-' + slot.key + '" ' +
+          'class="text-sm text-gypsum-300 mb-3 w-full">' +
+        '<div class="flex gap-2">' +
+          '<button onclick="uploadSlot(\'' + slot.key + '\')" ' +
+            'class="flex-1 bg-gold text-clay-950 font-bold py-2 rounded-lg hover:bg-gold-bright transition">رفع ونشر</button>' +
+        '</div>' +
+        '<p id="status-' + slot.key + '" class="text-sm mt-2 min-h-[1.25rem]"></p>';
+      grid.appendChild(card);
+    });
+    loadSoundPreview();
+  }
+
+  function soundUrl() {
+    return SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" + SOUND_KEY + "?v=" + Date.now();
+  }
+
+  function loadSoundPreview() {
+    document.getElementById("ambient-preview").style.display = "";
+    document.getElementById("ambient-preview").src = soundUrl();
+  }
+
+  async function uploadSound() {
+    var fileInput = document.getElementById("file-ambient-sound");
+    var statusEl = document.getElementById("status-ambient-sound");
+    var file = fileInput.files[0];
+    if (!file) {
+      statusEl.textContent = "الرجاء اختيار ملف صوت أولاً";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+      return;
+    }
+    statusEl.textContent = "جاري الرفع...";
+    statusEl.className = "text-gold text-sm mt-2";
+    try {
+      var res = await fetch(
+        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + SOUND_KEY,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "apikey": SUPABASE_ANON_KEY,
+            "Content-Type": file.type || "audio/mpeg",
+            "x-upsert": "true"
+          },
+          body: file
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      statusEl.textContent = "تم رفع الصوت بنجاح ✓ — سيظهر زر التشغيل للزوار الآن";
+      statusEl.className = "text-green-400 text-sm mt-2";
+      loadSoundPreview();
+      fileInput.value = "";
+    } catch (err) {
+      statusEl.textContent = "حدث خطأ أثناء الرفع، حاول مجدداً";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+    }
+  }
+
+  async function deleteSound() {
+    var statusEl = document.getElementById("status-ambient-sound");
+    try {
+      var res = await fetch(
+        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + SOUND_KEY,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "apikey": SUPABASE_ANON_KEY
+          }
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      statusEl.textContent = "تم حذف الصوت — الزر لن يظهر للزوار بعد الآن";
+      statusEl.className = "text-green-400 text-sm mt-2";
+      document.getElementById("ambient-preview").style.display = "none";
+    } catch (err) {
+      statusEl.textContent = "حدث خطأ أثناء الحذف";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+    }
+  }
+
+  async function uploadSlot(slotKey) {
+    var fileInput = document.getElementById("file-" + slotKey);
+    var statusEl = document.getElementById("status-" + slotKey);
+    var file = fileInput.files[0];
+    if (!file) {
+      statusEl.textContent = "الرجاء اختيار صورة أولاً";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+      return;
+    }
+    statusEl.textContent = "جاري الرفع...";
+    statusEl.className = "text-gold text-sm mt-2";
+
+    try {
+      var res = await fetch(
+        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + slotKey + ".jpg",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "apikey": SUPABASE_ANON_KEY,
+            "Content-Type": file.type || "image/jpeg",
+            "x-upsert": "true"
+          },
+          body: file
+        }
+      );
+
+      if (!res.ok) {
+        var errText = await res.text();
+        throw new Error(errText);
+      }
+
+      statusEl.textContent = "تم النشر بنجاح ✓";
+      statusEl.className = "text-green-400 text-sm mt-2";
+      document.getElementById("img-" + slotKey).src = publicUrl(slotKey);
+      fileInput.value = "";
+    } catch (err) {
+      statusEl.textContent = "حدث خطأ أثناء الرفع، حاول مجدداً";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+    }
+  }
+</script>
+</body>
+</html>
