@@ -680,14 +680,24 @@ tailwind.config = {
           setIcon(audio.muted);
         });
 
-        // كحل احتياطي: أول تفاعل من الزائر (لمسة/نقرة) يضمن استمرار الصوت لو منعه المتصفح تماماً
-        function resumeOnFirstInteraction() {
-          if (audio.paused) { audio.play().catch(function () {}); }
-          document.removeEventListener('click', resumeOnFirstInteraction);
-          document.removeEventListener('touchstart', resumeOnFirstInteraction);
+        // المتصفحات تمنع تشغيل صوت مسموع تلقائياً بدون أي تفاعل من الزائر —
+        // لذلك أول لمسة/نقرة/تمرير/ضغطة زر، حتى لو بسيطة، تُلغي الكتم فوراً
+        // وتُشغّل الصوت بشكل كامل، بحيث يبدو الصوت "شغّال تلقائي" لأغلب الزوار
+        // بمجرد ما يبدؤون بتصفح الصفحة، دون الحاجة يدوسون زر الصوت بالذات.
+        function unmuteOnFirstInteraction(e) {
+          // إذا كان أول تفاعل هو ضغطة زر الصوت نفسه، نترك تحكم الزائر اليدوي كما هو
+          if (!(e && e.target === btn)) {
+            audio.muted = false;
+            if (audio.paused) { audio.play().catch(function () {}); }
+            setIcon(false);
+          }
+          ['click', 'touchstart', 'keydown', 'scroll', 'wheel'].forEach(function (ev) {
+            document.removeEventListener(ev, unmuteOnFirstInteraction);
+          });
         }
-        document.addEventListener('click', resumeOnFirstInteraction, { once: true });
-        document.addEventListener('touchstart', resumeOnFirstInteraction, { once: true });
+        ['click', 'touchstart', 'keydown', 'scroll', 'wheel'].forEach(function (ev) {
+          document.addEventListener(ev, unmuteOnFirstInteraction, { once: true, passive: true });
+        });
       }
 
       fetch(settingsUrl).then(function (res) {
