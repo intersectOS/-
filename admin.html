@@ -35,6 +35,13 @@ tailwind.config = {
     background:#C9A227; color:#161009; border:none; padding:.5rem 1rem; border-radius:.5rem;
     font-family:'Tajawal',sans-serif; font-weight:700; cursor:pointer; margin-left:.75rem;
   }
+  input[type=range]{ accent-color:#C9A227; }
+  .switch{ position:relative; display:inline-block; width:52px; height:28px; }
+  .switch input{ opacity:0; width:0; height:0; }
+  .switch .slider{ position:absolute; cursor:pointer; inset:0; background:#3A2110; border:1px solid #5C3A26; border-radius:999px; transition:.2s; }
+  .switch .slider:before{ position:absolute; content:""; height:20px; width:20px; right:3px; top:3px; background:#D8C79E; border-radius:50%; transition:.2s; }
+  .switch input:checked + .slider{ background:#7A611C; border-color:#C9A227; }
+  .switch input:checked + .slider:before{ transform:translateX(-24px); background:#E8C34F; }
 </style>
 </head>
 <body class="font-sans min-h-screen">
@@ -62,15 +69,30 @@ tailwind.config = {
 
     <!-- ===== الأجواء الصوتية ===== -->
     <div class="card rounded-2xl p-6 mt-10">
-      <h2 class="font-display text-2xl text-gold-bright mb-2">صوت الأجواء (اختياري)</h2>
-      <p class="text-gypsum-300 text-sm mb-4">ارفع مقطع صوت قصير (mp3) — مثل صوت صبّ القهوة — وسيظهر زر تشغيل صغير للزوار أسفل يسار الموقع. إن لم تَرفع صوتاً، الزر لا يظهر إطلاقاً.</p>
-      <audio id="ambient-preview" controls class="w-full mb-3" onerror="this.style.display='none'"></audio>
-      <input type="file" accept="audio/*" id="file-ambient-sound" class="text-sm text-gypsum-300 mb-3 w-full">
-      <div class="flex gap-2">
-        <button onclick="uploadSound()" class="flex-1 bg-gold text-clay-950 font-bold py-2 rounded-lg hover:bg-gold-bright transition">رفع الصوت</button>
-        <button onclick="deleteSound()" class="px-4 border border-sadu-red text-sadu-red font-bold py-2 rounded-lg hover:bg-sadu-red hover:text-gypsum-100 transition">حذف الصوت</button>
+      <h2 class="font-display text-2xl text-gold-bright mb-2">صوت الأجواء</h2>
+      <p class="text-gypsum-300 text-sm mb-6">الصوت مضمّن في الموقع ويعمل تلقائياً عند دخول أي زائر. من هنا تتحكم فقط بتفعيله أو إيقافه، ودرجة ارتفاعه.</p>
+
+      <div class="flex items-center justify-between border-b border-clay-700 pb-4 mb-5">
+        <div>
+          <p class="text-gypsum-100 font-medium">تفعيل الصوت للزوار</p>
+          <p class="text-gypsum-300/70 text-xs mt-1">عند الإيقاف، لن يظهر أي زر صوت في الموقع إطلاقاً.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="sound-enabled-toggle">
+          <span class="slider"></span>
+        </label>
       </div>
-      <p id="status-ambient-sound" class="text-sm mt-2 min-h-[1.25rem]"></p>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-gypsum-100 font-medium">درجة الارتفاع</p>
+          <span id="volume-value" class="text-gold-bright font-bold">50%</span>
+        </div>
+        <input type="range" id="sound-volume-range" min="0" max="100" value="50" class="w-full">
+      </div>
+
+      <button onclick="saveSoundSettings()" class="w-full mt-6 bg-gold text-clay-950 font-bold py-2 rounded-lg hover:bg-gold-bright transition">حفظ إعدادات الصوت</button>
+      <p id="status-sound-settings" class="text-sm mt-2 min-h-[1.25rem]"></p>
     </div>
 
     <p class="text-center text-gypsum-300/70 text-sm mt-10">إرث كافي — نظام إدارة الصور</p>
@@ -81,7 +103,7 @@ tailwind.config = {
   var SUPABASE_URL = "https://gslxfgyghpbsfzzruwkk.supabase.co";
   var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzbHhmZ3lnaHBic2Z6enJ1d2trIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NzE0NzYsImV4cCI6MjA5OTU0NzQ3Nn0.5lDAQbAQfRNsA4B3WYEm9HkccMGmoRryho7vf9Xl6SU";
   var BUCKET = "site-images";
-  var SOUND_KEY = "ambient-sound.mp3";
+  var SOUND_SETTINGS_KEY = "ambient-sound-settings.json";
 
   // SHA-256 hash of the admin password (see message below for the plain password)
   var PASSWORD_HASH = "48308cd3828f2dbb36938c79e985aeae1f7cbbb25e2b3864c20a095ccdc1012e";
@@ -150,73 +172,64 @@ tailwind.config = {
         '<p id="status-' + slot.key + '" class="text-sm mt-2 min-h-[1.25rem]"></p>';
       grid.appendChild(card);
     });
-    loadSoundPreview();
+    loadSoundSettings();
   }
 
-  function soundUrl() {
-    return SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" + SOUND_KEY + "?v=" + Date.now();
+  function soundSettingsUrl() {
+    return SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" + SOUND_SETTINGS_KEY + "?v=" + Date.now();
   }
 
-  function loadSoundPreview() {
-    document.getElementById("ambient-preview").style.display = "";
-    document.getElementById("ambient-preview").src = soundUrl();
-  }
-
-  async function uploadSound() {
-    var fileInput = document.getElementById("file-ambient-sound");
-    var statusEl = document.getElementById("status-ambient-sound");
-    var file = fileInput.files[0];
-    if (!file) {
-      statusEl.textContent = "الرجاء اختيار ملف صوت أولاً";
-      statusEl.className = "text-sadu-red text-sm mt-2";
-      return;
+  async function loadSoundSettings() {
+    var toggle = document.getElementById("sound-enabled-toggle");
+    var range = document.getElementById("sound-volume-range");
+    var valueLabel = document.getElementById("volume-value");
+    try {
+      var res = await fetch(soundSettingsUrl());
+      if (!res.ok) throw new Error("no settings yet");
+      var settings = await res.json();
+      toggle.checked = settings.enabled !== false;
+      var vol = typeof settings.volume === "number" ? Math.round(settings.volume * 100) : 50;
+      range.value = vol;
+      valueLabel.textContent = vol + "%";
+    } catch (err) {
+      // لا توجد إعدادات محفوظة بعد — نستخدم الافتراضي: مفعّل بدرجة 50%
+      toggle.checked = true;
+      range.value = 50;
+      valueLabel.textContent = "50%";
     }
-    statusEl.textContent = "جاري الرفع...";
+  }
+
+  document.getElementById("sound-volume-range").addEventListener("input", function () {
+    document.getElementById("volume-value").textContent = this.value + "%";
+  });
+
+  async function saveSoundSettings() {
+    var statusEl = document.getElementById("status-sound-settings");
+    var enabled = document.getElementById("sound-enabled-toggle").checked;
+    var volume = Number(document.getElementById("sound-volume-range").value) / 100;
+
+    statusEl.textContent = "جاري الحفظ...";
     statusEl.className = "text-gold text-sm mt-2";
+
     try {
       var res = await fetch(
-        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + SOUND_KEY,
+        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + SOUND_SETTINGS_KEY,
         {
           method: "POST",
           headers: {
             "Authorization": "Bearer " + SUPABASE_ANON_KEY,
             "apikey": SUPABASE_ANON_KEY,
-            "Content-Type": file.type || "audio/mpeg",
+            "Content-Type": "application/json",
             "x-upsert": "true"
           },
-          body: file
+          body: JSON.stringify({ enabled: enabled, volume: volume })
         }
       );
       if (!res.ok) throw new Error(await res.text());
-      statusEl.textContent = "تم رفع الصوت بنجاح ✓ — سيظهر زر التشغيل للزوار الآن";
+      statusEl.textContent = "تم الحفظ بنجاح ✓ — التغيير يظهر للزوار مباشرة";
       statusEl.className = "text-green-400 text-sm mt-2";
-      loadSoundPreview();
-      fileInput.value = "";
     } catch (err) {
-      statusEl.textContent = "حدث خطأ أثناء الرفع، حاول مجدداً";
-      statusEl.className = "text-sadu-red text-sm mt-2";
-    }
-  }
-
-  async function deleteSound() {
-    var statusEl = document.getElementById("status-ambient-sound");
-    try {
-      var res = await fetch(
-        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + SOUND_KEY,
-        {
-          method: "DELETE",
-          headers: {
-            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-            "apikey": SUPABASE_ANON_KEY
-          }
-        }
-      );
-      if (!res.ok) throw new Error(await res.text());
-      statusEl.textContent = "تم حذف الصوت — الزر لن يظهر للزوار بعد الآن";
-      statusEl.className = "text-green-400 text-sm mt-2";
-      document.getElementById("ambient-preview").style.display = "none";
-    } catch (err) {
-      statusEl.textContent = "حدث خطأ أثناء الحذف";
+      statusEl.textContent = "حدث خطأ أثناء الحفظ، حاول مجدداً";
       statusEl.className = "text-sadu-red text-sm mt-2";
     }
   }
