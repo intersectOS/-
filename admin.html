@@ -111,6 +111,595 @@ tailwind.config = {
       <p id="status-password" class="text-sm mt-2 min-h-[1.25rem]"></p>
     </div>
 
+
+    <!-- ===== محتوى المنصة الرئيسية ===== -->
+    <div class="mt-10">
+      <div class="text-center mb-6">
+        <h2 class="font-display text-3xl text-gold-bright mb-2">محتوى المنصة الرئيسية</h2>
+        <p class="text-gypsum-300 text-sm max-w-2xl mx-auto">
+          عدّل أي نص بالموقع من هنا — عناوين، فقرات، أزرار، بنود — وينعكس فوراً على الصفحة الرئيسية دون لمس الكود.
+          الحقول التي تحتوي وسوم بسيطة مثل <code class="text-gold-bright">&lt;strong&gt;</code> أو <code class="text-gold-bright">&lt;br&gt;</code> يمكنك تعديل النص حولها والإبقاء على الوسوم كما هي لو حبيت نفس التنسيق.
+        </p>
+      </div>
+
+      <div class="flex gap-3 mb-6">
+        <button onclick="saveAllContent()" class="flex-1 bg-gold text-clay-950 font-bold py-3 rounded-lg hover:bg-gold-bright transition">حفظ كل التعديلات</button>
+        <button onclick="resetAllContentToDefault()" class="px-5 border border-sadu-red text-sadu-red font-bold py-3 rounded-lg hover:bg-sadu-red hover:text-gypsum-100 transition text-sm">استعادة كل النصوص الافتراضية</button>
+      </div>
+      <p id="status-content-editor" class="text-sm mb-6 min-h-[1.25rem] text-center"></p>
+
+      <div class="space-y-4">
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">عام</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عنوان الصفحة (في تبويب المتصفح)</label>
+          <input type="text" data-content-key="meta.pageTitle" data-content-html="0" value="مقترح شراكة استراتيجية | إرث كافي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">شاشة الافتتاح</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">مقدمة — سطر ١</label>
+          <input type="text" data-content-key="intro.cap1" data-content-html="0" value="الأرض"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">مقدمة — سطر ٢</label>
+          <input type="text" data-content-key="intro.cap2" data-content-html="0" value="المملكة العربية السعودية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">مقدمة — سطر ٣</label>
+          <input type="text" data-content-key="intro.cap3" data-content-html="0" value="حائل"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">مقدمة — سطر ٤</label>
+          <input type="text" data-content-key="intro.cap4" data-content-html="0" value="وهذا هو الإرث &quot;إرث كوفي&quot;"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">زر تخطي المقدمة</label>
+          <input type="text" data-content-key="intro.skipBtn" data-content-html="0" value="تخطّي المقدمة ←"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">شريط التنقل</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رابط: الرؤية</label>
+          <input type="text" data-content-key="nav.linkVision" data-content-html="0" value="الرؤية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رابط: الموقع</label>
+          <input type="text" data-content-key="nav.linkLocation" data-content-html="0" value="الموقع"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رابط: الشراكة</label>
+          <input type="text" data-content-key="nav.linkContract" data-content-html="0" value="الشراكة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رابط: المعرض</label>
+          <input type="text" data-content-key="nav.linkGallery" data-content-html="0" value="المعرض"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">زر إعادة الجولة</label>
+          <input type="text" data-content-key="nav.replayBtn" data-content-html="0" value="🌍 إعادة الجولة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">الغلاف</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الوسم العلوي</label>
+          <input type="text" data-content-key="hero.eyebrow" data-content-html="0" value="مقترح شراكة استراتيجية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان الرئيسي</label>
+          <textarea data-content-key="hero.title" data-content-html="1" rows="2"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">من مقهى تراثي مميز&lt;br&gt;إلى وجهة حائل الحية</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة التعريفية</label>
+          <textarea data-content-key="hero.description" data-content-html="1" rows="5"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">مقترح مُعدّ خصيصاً لإدارة &lt;strong class="text-gypsum-100"&gt;إرث كافي&lt;/strong&gt;، لتفعيل المكان كوجهة سياحية وثقافية متكاملة في قلب حائل — دون المساس بأصالته أو استقلالية مقهاكم اليومي.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">نص زر التصفح</label>
+          <input type="text" data-content-key="hero.ctaBtn" data-content-html="0" value="تصفّح المقترح"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">الرؤية والهدف</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رقم القسم</label>
+          <input type="text" data-content-key="vision.sectionNum" data-content-html="0" value="١"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الوسم العلوي</label>
+          <input type="text" data-content-key="vision.eyebrow" data-content-html="0" value="القسم الأول — المقترح الاستراتيجي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="vision.title" data-content-html="0" value="الرؤية والهدف"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">فقرة الرؤية</label>
+          <textarea data-content-key="vision.paragraph1" data-content-html="1" rows="6"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">&lt;strong class="text-gypsum-100"&gt;الرؤية:&lt;/strong&gt; تحويل «إرث كافي» والمبنى الطيني التراثي المحيط به إلى منظومة اقتصادية وسياحية متكاملة، تقدّم تجارب تفاعلية مستدامة لزوار حائل — بين ظلال جبال أجا وسلمى، وعلى مقربة من إرث قلعة عارف وقوافل الأمس.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">فقرة الهدف</label>
+          <textarea data-content-key="vision.paragraph2" data-content-html="1" rows="5"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">&lt;strong class="text-gypsum-100"&gt;الهدف:&lt;/strong&gt; تفعيل المكان وإحياؤه عبر فعاليات متكاملة، مع الحفاظ التام على استقلالية مبيعات المقهى اليومية — لخلق بيئة جاذبة تدعم تسويق المكان كوجهة رئيسية في المنطقة.</textarea>
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">استراتيجية التفعيل الشامل</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رقم القسم</label>
+          <input type="text" data-content-key="strategy.sectionNum" data-content-html="0" value="٢"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="strategy.title" data-content-html="0" value="استراتيجية «التفعيل الشامل»"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة</label>
+          <textarea data-content-key="strategy.paragraph" data-content-html="1" rows="6"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">في المرحلة التأسيسية، يقوم هذا النموذج على مبدأ &lt;strong class="text-gypsum-100"&gt;Win-Win&lt;/strong&gt;: تبادل المنافع داخل المكان عبر الفعاليات، بما ينعكس إيجاباً على مبيعات المقهى بشكل غير مباشر — مقابل حصول الجهة المشغلة على حرية استخدام المكان بشكل كامل.</textarea>
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">الموقع</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الوسم العلوي</label>
+          <input type="text" data-content-key="location.eyebrow" data-content-html="0" value="موقع استراتيجي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="location.title" data-content-html="0" value="في قلب حائل التاريخية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة</label>
+          <input type="text" data-content-key="location.paragraph" data-content-html="0" value="موقع إرث كافي، وسط حركة سياحية تخدم الفكرة من يومها الأول."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">نص زر خرائط Google</label>
+          <input type="text" data-content-key="location.mapBtn" data-content-html="0" value="فتح الموقع في خرائط Google ↗"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">عقد الشراكة</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الوسم العلوي</label>
+          <input type="text" data-content-key="contract.eyebrow" data-content-html="0" value="القسم الثاني — مسودة عقد الشراكة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="contract.title" data-content-html="0" value="بابان لبيتٍ واحد"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة</label>
+          <input type="text" data-content-key="contract.paragraph" data-content-html="0" value="لكل طرف طريقه الخاص واستقلاليته التامة، وكلاهما يخدم المكان نفسه."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">تسمية الطرف الثاني</label>
+          <input type="text" data-content-key="contract.partyLabel" data-content-html="0" value="الطرف الثاني — الجهة المشغلة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">اسم الجهة</label>
+          <input type="text" data-content-key="contract.partyName" data-content-html="0" value="لانكول"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الاسم بالإنجليزي</label>
+          <textarea data-content-key="contract.partySub" data-content-html="1" rows="2"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">LanCul — Language &amp;amp; Culture</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">وصف الجهة</label>
+          <textarea data-content-key="contract.partyDesc" data-content-html="0" rows="4"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">الجهة السياحية المشغلة المسؤولة عن تفعيل «إرث كافي» بالفعاليات والبرامج السياحية والثقافية الواردة في هذا المقترح.</textarea>
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">المادة الأولى</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رقم المادة</label>
+          <input type="text" data-content-key="article1.label" data-content-html="0" value="المادة الأولى"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="article1.title" data-content-html="0" value="الالتزامات والصلاحيات"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عنوان الطرف الأول</label>
+          <input type="text" data-content-key="article1.party1Title" data-content-html="0" value="الطرف الأول — إدارة إرث كافي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">بند ١ — الطرف الأول</label>
+          <textarea data-content-key="article1.party1Item1" data-content-html="0" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">الاستمرار في تقديم خدمات المقهى اليومية بكفاءة لخدمة الزوار ومرتادي الفعاليات.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">بند ٢ — الطرف الأول</label>
+          <input type="text" data-content-key="article1.party1Item2" data-content-html="0" value="عدم التدخل في تسعير أو إدارة أو تنظيم فعاليات الطرف الثاني."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">بند ٣ — الطرف الأول</label>
+          <textarea data-content-key="article1.party1Item3" data-content-html="0" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">منح الطرف الثاني كامل الحرية في استخدام مرافق المكان لتنظيم الفعاليات من الألف إلى الياء.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عنوان الطرف الثاني</label>
+          <input type="text" data-content-key="article1.party2Title" data-content-html="0" value="الطرف الثاني — لانكول (الجهة المشغلة)"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">بند ١ — الطرف الثاني</label>
+          <input type="text" data-content-key="article1.party2Item1" data-content-html="0" value="إدارة وتفعيل المكان سياحياً وتنظيم الفعاليات بشكل كامل."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">بند ٢ — الطرف الثاني</label>
+          <input type="text" data-content-key="article1.party2Item2" data-content-html="0" value="تقديم الدعم في تسويق المكان كوجهة سياحية متكاملة لزيادة عدد الزوار."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">بند ٣ — الطرف الثاني</label>
+          <input type="text" data-content-key="article1.party2Item3" data-content-html="0" value="عدم التدخل نهائياً في إدارة المبيعات اليومية الخاصة بالمقهى."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">المادة الثانية</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رقم المادة</label>
+          <input type="text" data-content-key="article2.label" data-content-html="0" value="المادة الثانية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="article2.title" data-content-html="0" value="الاستقلالية المالية — أول ٣ سنوات"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة التمهيدية</label>
+          <textarea data-content-key="article2.subtitle" data-content-html="0" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">فصل تام للذمم المالية بين الطرفين خلال مرحلة التأسيس، لتشجيع النمو المستقل لكل جهة.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">النسبة — لإرث كافي</label>
+          <input type="text" data-content-key="article2.stat1Percent" data-content-html="0" value="١٠٠٪"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عنوان — لإرث كافي</label>
+          <input type="text" data-content-key="article2.stat1Title" data-content-html="0" value="لإرث كافي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">وصف — لإرث كافي</label>
+          <textarea data-content-key="article2.stat1Desc" data-content-html="0" rows="4"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">من كامل إيرادات المبيعات اليومية للمقهى، دون أي نسبة للطرف الثاني — حتى لو حضر العميل بسبب فعالية أو تسويق قام به الطرف الثاني.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">النسبة — للجهة المشغلة</label>
+          <input type="text" data-content-key="article2.stat2Percent" data-content-html="0" value="١٠٠٪"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عنوان — للجهة المشغلة</label>
+          <input type="text" data-content-key="article2.stat2Title" data-content-html="0" value="للجهة المشغلة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">وصف — للجهة المشغلة</label>
+          <textarea data-content-key="article2.stat2Desc" data-content-html="0" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">من كافة إيرادات الفعاليات والأنشطة السياحية التي تُقام داخل الموقع، دون أي نسبة لإرث كافي.</textarea>
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">المادة الثالثة</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رقم المادة</label>
+          <input type="text" data-content-key="article3.label" data-content-html="0" value="المادة الثالثة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="article3.title" data-content-html="0" value="استمرار الشراكة — بعد ٣ سنوات"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة</label>
+          <textarea data-content-key="article3.paragraph" data-content-html="1" rows="6"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">يتفق الطرفان على استمرار الشراكة بعد انقضاء السنوات الثلاث الأولى، بالانتقال إلى &lt;strong class="text-gold"&gt;نموذج نسبة متفق عليها&lt;/strong&gt; من عوائد الفعاليات لصالح إرث كافي، تُحدَّد تفاصيلها في ملحق عقد منفصل يوقّعه الطرفان في حينه.</textarea>
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">المادة الرابعة</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">رقم المادة</label>
+          <input type="text" data-content-key="article4.label" data-content-html="0" value="المادة الرابعة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="article4.title" data-content-html="0" value="التسويق والهوية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة</label>
+          <textarea data-content-key="article4.paragraph" data-content-html="0" rows="4"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">يتعاون الطرفان في تسويق المكان؛ حيث يقوم الطرف الثاني بتسويق «إرث كافي» كحاضنة لفعالياته، مما يرفع من قيمة العلامة التجارية للمكان ويزيد من حركة الإقبال اليومية.</textarea>
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">برنامج لانكول</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الوسم العلوي</label>
+          <input type="text" data-content-key="program.eyebrow" data-content-html="0" value="القسم الثالث — من إعداد لانكول"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="program.title" data-content-html="0" value="برنامج التفعيل السياحي والثقافي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الفقرة التعريفية</label>
+          <textarea data-content-key="program.paragraph" data-content-html="0" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">خطة لانكول لتحويل «إرث كافي» إلى وجهة سياحية وثقافية متكاملة، عبر مسارين متوازيين.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عنوان العمود الأول</label>
+          <input type="text" data-content-key="program.col1Title" data-content-html="0" value="منتجات السياحة الترفيهية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ١ — بند ١</label>
+          <input type="text" data-content-key="program.col1Item1" data-content-html="0" value="حزم العطلات الشتوية."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ١ — بند ٢</label>
+          <input type="text" data-content-key="program.col1Item2" data-content-html="0" value="الرحلات البرية."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ١ — بند ٣</label>
+          <input type="text" data-content-key="program.col1Item3" data-content-html="0" value="تحديد تجمّع «إرث الانطلاق» والمبيت."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ١ — بند ٤</label>
+          <input type="text" data-content-key="program.col1Item4" data-content-html="0" value="تجربة منتجات متعددة تحت الإنشاء، والإعلان عنها تباعاً."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ١ — بند ٥</label>
+          <input type="text" data-content-key="program.col1Item5" data-content-html="0" value="باقات من لانكول تراثية ثقافية شعبية."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عنوان العمود الثاني</label>
+          <input type="text" data-content-key="program.col2Title" data-content-html="0" value="جذب الإعلام والقنوات الثقافية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ١</label>
+          <input type="text" data-content-key="program.col2Item1" data-content-html="0" value="جذب القنوات الإعلامية والسينمائيين."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٢</label>
+          <textarea data-content-key="program.col2Item2" data-content-html="0" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">إنشاء «مكتبة الأولين» تجهيزاً لمقر الأدباء والمثقفين وملتقى النقّاد، تحت مظلة لانكول.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٣</label>
+          <input type="text" data-content-key="program.col2Item3" data-content-html="0" value="غرفة «منصة سراج» — لإعداد قصص التاريخ والمهتمين به."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٤</label>
+          <input type="text" data-content-key="program.col2Item4" data-content-html="0" value="اعتماد الموقع كمقر رسمي للفعاليات."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٥</label>
+          <input type="text" data-content-key="program.col2Item5" data-content-html="0" value="جذب قنوات البودكاست."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٦</label>
+          <input type="text" data-content-key="program.col2Item6" data-content-html="0" value="التنسيق ضمن فعاليات المنطقة."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٧</label>
+          <textarea data-content-key="program.col2Item7" data-content-html="0" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">إضافة «إرث» ضمن خارطة الطريق السياحية لدى المكاتب المعتمدة دولياً ومحلياً.</textarea>
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٨</label>
+          <input type="text" data-content-key="program.col2Item8" data-content-html="0" value="إقامة هاكاثونات وبرامج مسرّعات لرواد الأعمال."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">عمود ٢ — بند ٩</label>
+          <input type="text" data-content-key="program.col2Item9" data-content-html="0" value="إقامة مزادات سياحية ثقافية."
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">المعرض</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الوسم العلوي</label>
+          <input type="text" data-content-key="gallery.eyebrow" data-content-html="0" value="لمحات من المكان"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">العنوان</label>
+          <input type="text" data-content-key="gallery.title" data-content-html="0" value="روح إرث كافي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">تسمية الصورة الكبيرة</label>
+          <input type="text" data-content-key="gallery.caption1" data-content-html="0" value="ليالي حائل الدافئة"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        </div>
+      </div>
+      <div class="card rounded-2xl overflow-hidden">
+        <button type="button" onclick="toggleContentSection(this)" class="w-full flex items-center justify-between p-4 text-right hover:bg-clay-800/40 transition-colors">
+          <span class="font-display text-lg text-gold-bright">الختام</span>
+          <span class="content-toggle-icon text-gold text-xl transition-transform">⌄</span>
+        </button>
+        <div class="content-section-body hidden px-4 pb-5 space-y-4">
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">اسم المقهى</label>
+          <input type="text" data-content-key="footer.title" data-content-html="0" value="إرث كافي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">الموقع الجغرافي</label>
+          <input type="text" data-content-key="footer.location" data-content-html="0" value="حائل، المملكة العربية السعودية"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">ملاحظة التوقيع</label>
+          <input type="text" data-content-key="footer.note" data-content-html="0" value="هذا المقترح مُعدّ للمناقشة والاعتماد بين الطرفين"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">تسمية الطرف الأول</label>
+          <input type="text" data-content-key="footer.party1Label" data-content-html="0" value="الطرف الأول — إدارة إرث كافي"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">نص خانة التوقيع ١</label>
+          <input type="text" data-content-key="footer.party1Sign" data-content-html="0" value="التوقيع والتاريخ"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">تسمية الطرف الثاني</label>
+          <input type="text" data-content-key="footer.party2Label" data-content-html="0" value="الطرف الثاني — الجهة المشغلة للفعاليات"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">نص خانة التوقيع ٢</label>
+          <input type="text" data-content-key="footer.party2Sign" data-content-html="0" value="التوقيع والتاريخ"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold">
+        </div>
+        <div>
+          <label class="block text-gypsum-200 text-sm mb-1">سطر الحقوق</label>
+          <textarea data-content-key="footer.copyright" data-content-html="1" rows="3"
+            class="w-full rounded-lg px-3 py-2 bg-clay-950 border border-clay-700 text-gypsum-100 text-sm outline-none focus:border-gold leading-relaxed">&amp;copy; 2026 مقترح شراكة استراتيجية — إرث كافي. جميع الحقوق محفوظة.</textarea>
+        </div>
+        </div>
+      </div>
+      </div>
+
+      <button onclick="saveAllContent()" class="w-full mt-6 bg-gold text-clay-950 font-bold py-3 rounded-lg hover:bg-gold-bright transition">حفظ كل التعديلات</button>
+      <p id="status-content-editor-bottom" class="text-sm mt-2 min-h-[1.25rem] text-center"></p>
+    </div>
+
     <p class="text-center text-gypsum-300/70 text-sm mt-10">إرث كافي — نظام إدارة الصور</p>
   </div>
 
@@ -162,6 +751,7 @@ tailwind.config = {
       document.getElementById("panel").classList.remove("hidden");
       sessionStorage.setItem("erth_admin_ok", "1");
       buildGrid();
+      loadContentEditor();
     } else {
       document.getElementById("pwError").classList.remove("hidden");
     }
@@ -175,6 +765,7 @@ tailwind.config = {
     document.getElementById("gate").classList.add("hidden");
     document.getElementById("panel").classList.remove("hidden");
     buildGrid();
+    loadContentEditor();
   }
 
   function publicUrl(slotKey) {
@@ -307,6 +898,76 @@ tailwind.config = {
       statusEl.textContent = "حدث خطأ أثناء الحفظ، حاول مجدداً";
       statusEl.className = "text-sadu-red text-sm mt-2";
     }
+  }
+
+  // ====== محتوى المنصة الرئيسية ======
+  var CONTENT_KEY = "site-content.json";
+  var CONTENT_DEFAULTS = {"meta.pageTitle": "مقترح شراكة استراتيجية | إرث كافي", "intro.cap1": "الأرض", "intro.cap2": "المملكة العربية السعودية", "intro.cap3": "حائل", "intro.cap4": "وهذا هو الإرث \"إرث كوفي\"", "intro.skipBtn": "تخطّي المقدمة ←", "nav.linkVision": "الرؤية", "nav.linkLocation": "الموقع", "nav.linkContract": "الشراكة", "nav.linkGallery": "المعرض", "nav.replayBtn": "🌍 إعادة الجولة", "hero.eyebrow": "مقترح شراكة استراتيجية", "hero.title": "من مقهى تراثي مميز<br>إلى وجهة حائل الحية", "hero.description": "مقترح مُعدّ خصيصاً لإدارة <strong class=\"text-gypsum-100\">إرث كافي</strong>، لتفعيل المكان كوجهة سياحية وثقافية متكاملة في قلب حائل — دون المساس بأصالته أو استقلالية مقهاكم اليومي.", "hero.ctaBtn": "تصفّح المقترح", "vision.sectionNum": "١", "vision.eyebrow": "القسم الأول — المقترح الاستراتيجي", "vision.title": "الرؤية والهدف", "vision.paragraph1": "<strong class=\"text-gypsum-100\">الرؤية:</strong> تحويل «إرث كافي» والمبنى الطيني التراثي المحيط به إلى منظومة اقتصادية وسياحية متكاملة، تقدّم تجارب تفاعلية مستدامة لزوار حائل — بين ظلال جبال أجا وسلمى، وعلى مقربة من إرث قلعة عارف وقوافل الأمس.", "vision.paragraph2": "<strong class=\"text-gypsum-100\">الهدف:</strong> تفعيل المكان وإحياؤه عبر فعاليات متكاملة، مع الحفاظ التام على استقلالية مبيعات المقهى اليومية — لخلق بيئة جاذبة تدعم تسويق المكان كوجهة رئيسية في المنطقة.", "strategy.sectionNum": "٢", "strategy.title": "استراتيجية «التفعيل الشامل»", "strategy.paragraph": "في المرحلة التأسيسية، يقوم هذا النموذج على مبدأ <strong class=\"text-gypsum-100\">Win-Win</strong>: تبادل المنافع داخل المكان عبر الفعاليات، بما ينعكس إيجاباً على مبيعات المقهى بشكل غير مباشر — مقابل حصول الجهة المشغلة على حرية استخدام المكان بشكل كامل.", "location.eyebrow": "موقع استراتيجي", "location.title": "في قلب حائل التاريخية", "location.paragraph": "موقع إرث كافي، وسط حركة سياحية تخدم الفكرة من يومها الأول.", "location.mapBtn": "فتح الموقع في خرائط Google ↗", "contract.eyebrow": "القسم الثاني — مسودة عقد الشراكة", "contract.title": "بابان لبيتٍ واحد", "contract.paragraph": "لكل طرف طريقه الخاص واستقلاليته التامة، وكلاهما يخدم المكان نفسه.", "contract.partyLabel": "الطرف الثاني — الجهة المشغلة", "contract.partyName": "لانكول", "contract.partySub": "LanCul — Language &amp; Culture", "contract.partyDesc": "الجهة السياحية المشغلة المسؤولة عن تفعيل «إرث كافي» بالفعاليات والبرامج السياحية والثقافية الواردة في هذا المقترح.", "article1.label": "المادة الأولى", "article1.title": "الالتزامات والصلاحيات", "article1.party1Title": "الطرف الأول — إدارة إرث كافي", "article1.party1Item1": "الاستمرار في تقديم خدمات المقهى اليومية بكفاءة لخدمة الزوار ومرتادي الفعاليات.", "article1.party1Item2": "عدم التدخل في تسعير أو إدارة أو تنظيم فعاليات الطرف الثاني.", "article1.party1Item3": "منح الطرف الثاني كامل الحرية في استخدام مرافق المكان لتنظيم الفعاليات من الألف إلى الياء.", "article1.party2Title": "الطرف الثاني — لانكول (الجهة المشغلة)", "article1.party2Item1": "إدارة وتفعيل المكان سياحياً وتنظيم الفعاليات بشكل كامل.", "article1.party2Item2": "تقديم الدعم في تسويق المكان كوجهة سياحية متكاملة لزيادة عدد الزوار.", "article1.party2Item3": "عدم التدخل نهائياً في إدارة المبيعات اليومية الخاصة بالمقهى.", "article2.label": "المادة الثانية", "article2.title": "الاستقلالية المالية — أول ٣ سنوات", "article2.subtitle": "فصل تام للذمم المالية بين الطرفين خلال مرحلة التأسيس، لتشجيع النمو المستقل لكل جهة.", "article2.stat1Percent": "١٠٠٪", "article2.stat1Title": "لإرث كافي", "article2.stat1Desc": "من كامل إيرادات المبيعات اليومية للمقهى، دون أي نسبة للطرف الثاني — حتى لو حضر العميل بسبب فعالية أو تسويق قام به الطرف الثاني.", "article2.stat2Percent": "١٠٠٪", "article2.stat2Title": "للجهة المشغلة", "article2.stat2Desc": "من كافة إيرادات الفعاليات والأنشطة السياحية التي تُقام داخل الموقع، دون أي نسبة لإرث كافي.", "article3.label": "المادة الثالثة", "article3.title": "استمرار الشراكة — بعد ٣ سنوات", "article3.paragraph": "يتفق الطرفان على استمرار الشراكة بعد انقضاء السنوات الثلاث الأولى، بالانتقال إلى <strong class=\"text-gold\">نموذج نسبة متفق عليها</strong> من عوائد الفعاليات لصالح إرث كافي، تُحدَّد تفاصيلها في ملحق عقد منفصل يوقّعه الطرفان في حينه.", "article4.label": "المادة الرابعة", "article4.title": "التسويق والهوية", "article4.paragraph": "يتعاون الطرفان في تسويق المكان؛ حيث يقوم الطرف الثاني بتسويق «إرث كافي» كحاضنة لفعالياته، مما يرفع من قيمة العلامة التجارية للمكان ويزيد من حركة الإقبال اليومية.", "program.eyebrow": "القسم الثالث — من إعداد لانكول", "program.title": "برنامج التفعيل السياحي والثقافي", "program.paragraph": "خطة لانكول لتحويل «إرث كافي» إلى وجهة سياحية وثقافية متكاملة، عبر مسارين متوازيين.", "program.col1Title": "منتجات السياحة الترفيهية", "program.col1Item1": "حزم العطلات الشتوية.", "program.col1Item2": "الرحلات البرية.", "program.col1Item3": "تحديد تجمّع «إرث الانطلاق» والمبيت.", "program.col1Item4": "تجربة منتجات متعددة تحت الإنشاء، والإعلان عنها تباعاً.", "program.col1Item5": "باقات من لانكول تراثية ثقافية شعبية.", "program.col2Title": "جذب الإعلام والقنوات الثقافية", "program.col2Item1": "جذب القنوات الإعلامية والسينمائيين.", "program.col2Item2": "إنشاء «مكتبة الأولين» تجهيزاً لمقر الأدباء والمثقفين وملتقى النقّاد، تحت مظلة لانكول.", "program.col2Item3": "غرفة «منصة سراج» — لإعداد قصص التاريخ والمهتمين به.", "program.col2Item4": "اعتماد الموقع كمقر رسمي للفعاليات.", "program.col2Item5": "جذب قنوات البودكاست.", "program.col2Item6": "التنسيق ضمن فعاليات المنطقة.", "program.col2Item7": "إضافة «إرث» ضمن خارطة الطريق السياحية لدى المكاتب المعتمدة دولياً ومحلياً.", "program.col2Item8": "إقامة هاكاثونات وبرامج مسرّعات لرواد الأعمال.", "program.col2Item9": "إقامة مزادات سياحية ثقافية.", "gallery.eyebrow": "لمحات من المكان", "gallery.title": "روح إرث كافي", "gallery.caption1": "ليالي حائل الدافئة", "footer.title": "إرث كافي", "footer.location": "حائل، المملكة العربية السعودية", "footer.note": "هذا المقترح مُعدّ للمناقشة والاعتماد بين الطرفين", "footer.party1Label": "الطرف الأول — إدارة إرث كافي", "footer.party1Sign": "التوقيع والتاريخ", "footer.party2Label": "الطرف الثاني — الجهة المشغلة للفعاليات", "footer.party2Sign": "التوقيع والتاريخ", "footer.copyright": "&copy; 2026 مقترح شراكة استراتيجية — إرث كافي. جميع الحقوق محفوظة."};
+
+  function toggleContentSection(btn) {
+    var body = btn.nextElementSibling;
+    var icon = btn.querySelector('.content-toggle-icon');
+    body.classList.toggle('hidden');
+    icon.style.transform = body.classList.contains('hidden') ? '' : 'rotate(180deg)';
+  }
+
+  function contentFieldEls() {
+    return document.querySelectorAll('[data-content-key]');
+  }
+
+  async function loadContentEditor() {
+    var savedData = {};
+    try {
+      var res = await fetch(SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" + CONTENT_KEY + "?v=" + Date.now());
+      if (res.ok) savedData = await res.json();
+    } catch (err) {
+      // لا يوجد محتوى محفوظ بعد — تبقى الحقول بالقيم الافتراضية
+    }
+    contentFieldEls().forEach(function (el) {
+      var key = el.getAttribute('data-content-key');
+      if (savedData && typeof savedData[key] === 'string') {
+        el.value = savedData[key];
+      }
+    });
+  }
+
+  async function saveAllContent() {
+    var statusEls = [document.getElementById("status-content-editor"), document.getElementById("status-content-editor-bottom")];
+    statusEls.forEach(function (el) { el.textContent = "جاري الحفظ..."; el.className = "text-gold text-sm mb-6 min-h-[1.25rem] text-center"; });
+
+    var data = {};
+    contentFieldEls().forEach(function (el) {
+      var key = el.getAttribute('data-content-key');
+      data[key] = el.value;
+    });
+
+    try {
+      var res = await fetch(
+        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + CONTENT_KEY,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "apikey": SUPABASE_ANON_KEY,
+            "Content-Type": "application/json",
+            "x-upsert": "true"
+          },
+          body: JSON.stringify(data)
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      statusEls.forEach(function (el) { el.textContent = "تم حفظ كل التعديلات بنجاح ✓ — ظاهرة الآن بالموقع"; el.className = "text-green-400 text-sm mb-6 min-h-[1.25rem] text-center"; });
+    } catch (err) {
+      statusEls.forEach(function (el) { el.textContent = "حدث خطأ أثناء الحفظ، حاول مجدداً"; el.className = "text-sadu-red text-sm mb-6 min-h-[1.25rem] text-center"; });
+    }
+  }
+
+  function resetAllContentToDefault() {
+    if (!confirm("سيتم استرجاع كل النصوص لقيمها الافتراضية الأصلية بجميع الحقول (لن يُحفظ إلا بعد الضغط على حفظ). متابعة؟")) return;
+    contentFieldEls().forEach(function (el) {
+      var key = el.getAttribute('data-content-key');
+      if (CONTENT_DEFAULTS.hasOwnProperty(key)) el.value = CONTENT_DEFAULTS[key];
+    });
   }
 
   async function uploadSlot(slotKey) {
