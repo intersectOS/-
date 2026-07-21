@@ -95,6 +95,22 @@ tailwind.config = {
       <p id="status-sound-settings" class="text-sm mt-2 min-h-[1.25rem]"></p>
     </div>
 
+    <!-- ===== تغيير كلمة المرور ===== -->
+    <div class="card rounded-2xl p-6 mt-6">
+      <h2 class="font-display text-2xl text-gold-bright mb-2">تغيير كلمة المرور</h2>
+      <p class="text-gypsum-300 text-sm mb-4">غيّر كلمة مرور الدخول للوحة التحكم في أي وقت.</p>
+
+      <div class="space-y-3">
+        <input id="newPassword" type="password" placeholder="كلمة المرور الجديدة"
+          class="w-full rounded-lg px-4 py-3 bg-clay-950 border border-clay-700 text-gypsum-100 outline-none focus:border-gold">
+        <input id="newPasswordConfirm" type="password" placeholder="تأكيد كلمة المرور الجديدة"
+          class="w-full rounded-lg px-4 py-3 bg-clay-950 border border-clay-700 text-gypsum-100 outline-none focus:border-gold">
+      </div>
+
+      <button onclick="changePassword()" class="w-full mt-4 bg-gold text-clay-950 font-bold py-2 rounded-lg hover:bg-gold-bright transition">حفظ كلمة المرور الجديدة</button>
+      <p id="status-password" class="text-sm mt-2 min-h-[1.25rem]"></p>
+    </div>
+
     <p class="text-center text-gypsum-300/70 text-sm mt-10">إرث كافي — نظام إدارة الصور</p>
   </div>
 
@@ -104,9 +120,10 @@ tailwind.config = {
   var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzbHhmZ3lnaHBic2Z6enJ1d2trIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NzE0NzYsImV4cCI6MjA5OTU0NzQ3Nn0.5lDAQbAQfRNsA4B3WYEm9HkccMGmoRryho7vf9Xl6SU";
   var BUCKET = "site-images";
   var SOUND_SETTINGS_KEY = "ambient-sound-settings.json";
+  var PASSWORD_KEY = "admin-password.json";
 
-  // SHA-256 hash of the admin password (see message below for the plain password)
-  var PASSWORD_HASH = "48308cd3828f2dbb36938c79e985aeae1f7cbbb25e2b3864c20a095ccdc1012e";
+  // كلمة المرور الافتراضية: 123 (يمكن تغييرها من داخل لوحة التحكم بعد الدخول)
+  var DEFAULT_PASSWORD_HASH = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3";
 
   var SLOTS = [
     { key: "hero",                      label: "الصورة الرئيسية (الغلاف الليلي)" },
@@ -124,10 +141,23 @@ tailwind.config = {
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
   }
 
+  async function getCurrentPasswordHash() {
+    try {
+      var res = await fetch(SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" + PASSWORD_KEY + "?v=" + Date.now());
+      if (!res.ok) throw new Error("no custom password saved yet");
+      var data = await res.json();
+      if (data && data.hash) return data.hash;
+      throw new Error("bad format");
+    } catch (err) {
+      return DEFAULT_PASSWORD_HASH;
+    }
+  }
+
   async function tryLogin() {
     var val = document.getElementById("pwInput").value;
     var hash = await sha256(val);
-    if (hash === PASSWORD_HASH) {
+    var currentHash = await getCurrentPasswordHash();
+    if (hash === currentHash) {
       document.getElementById("gate").classList.add("hidden");
       document.getElementById("panel").classList.remove("hidden");
       sessionStorage.setItem("erth_admin_ok", "1");
@@ -228,6 +258,51 @@ tailwind.config = {
       if (!res.ok) throw new Error(await res.text());
       statusEl.textContent = "تم الحفظ بنجاح ✓ — التغيير يظهر للزوار مباشرة";
       statusEl.className = "text-green-400 text-sm mt-2";
+    } catch (err) {
+      statusEl.textContent = "حدث خطأ أثناء الحفظ، حاول مجدداً";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+    }
+  }
+
+  async function changePassword() {
+    var statusEl = document.getElementById("status-password");
+    var pw1 = document.getElementById("newPassword").value;
+    var pw2 = document.getElementById("newPasswordConfirm").value;
+
+    if (!pw1 || pw1.length < 3) {
+      statusEl.textContent = "كلمة المرور قصيرة جداً، اختر كلمة مرور أطول";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+      return;
+    }
+    if (pw1 !== pw2) {
+      statusEl.textContent = "كلمتا المرور غير متطابقتين";
+      statusEl.className = "text-sadu-red text-sm mt-2";
+      return;
+    }
+
+    statusEl.textContent = "جاري الحفظ...";
+    statusEl.className = "text-gold text-sm mt-2";
+
+    try {
+      var newHash = await sha256(pw1);
+      var res = await fetch(
+        SUPABASE_URL + "/storage/v1/object/" + BUCKET + "/" + PASSWORD_KEY,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "apikey": SUPABASE_ANON_KEY,
+            "Content-Type": "application/json",
+            "x-upsert": "true"
+          },
+          body: JSON.stringify({ hash: newHash })
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      statusEl.textContent = "تم تغيير كلمة المرور بنجاح ✓";
+      statusEl.className = "text-green-400 text-sm mt-2";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("newPasswordConfirm").value = "";
     } catch (err) {
       statusEl.textContent = "حدث خطأ أثناء الحفظ، حاول مجدداً";
       statusEl.className = "text-sadu-red text-sm mt-2";
